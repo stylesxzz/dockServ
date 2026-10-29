@@ -17,13 +17,13 @@ Instale Docker Engine e o plugin Docker Compose pelo repositório oficial antes 
 cp .env.example .env
 nano .env
 chmod 600 .env
-./scripts/setup.sh
+bash scripts/setup.sh
 ```
 
 ## 3. Baixar modelo e testar API
 
 ```bash
-./scripts/install-model.sh qwen2.5:3b
+bash scripts/install-model.sh qwen2.5:3b
 curl http://127.0.0.1:11434/v1/chat/completions -H 'Content-Type: application/json' -d '{"model":"qwen2.5:3b","messages":[{"role":"user","content":"DockServ funcionando?"}],"stream":false}'
 ```
 
@@ -49,7 +49,7 @@ docker compose ps
 docker compose logs -f --tail=100
 docker compose restart
 docker compose down
-./scripts/backup.sh
+bash scripts/backup.sh
 ```
 
 **Não use `docker compose down -v`** se quiser preservar os volumes nomeados.
