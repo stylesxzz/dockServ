@@ -26,6 +26,65 @@
 | Experiência | Intermediário em Linux; Docker básico. |
 | Acesso | LAN + Tailscale para acesso remoto, sem encaminhamento de portas no roteador. |
 
+## Instalação rápida
+
+> Este procedimento pressupõe Ubuntu Server 24.04 LTS e Docker Engine + Docker Compose instalados pelo repositório oficial. O script instala a stack da aplicação, não instala o sistema operacional nem o Docker.
+
+```bash
+# 1. Instale Git e clone o projeto
+sudo apt update
+sudo apt install -y git
+git clone https://github.com/stylesxzz/dockServ.git
+cd dockServ
+
+# 2. Crie a configuração local (não envie .env ao GitHub)
+cp .env.example .env
+nano .env
+chmod 600 .env
+
+# 3. Valide e inicie a stack
+bash scripts/setup.sh
+
+# 4. Baixe um modelo inicial (escolha conforme a RAM disponível)
+bash scripts/install-model.sh qwen2.5:3b
+
+# 5. Verifique os containers e logs
+docker compose ps
+docker compose logs -f --tail=100
+```
+
+Interfaces locais (as portas são intencionalmente vinculadas a `127.0.0.1`):
+
+- Open WebUI: http://127.0.0.1:3000
+- Site de demonstração: http://127.0.0.1:8081
+- App Node.js: http://127.0.0.1:3002
+- File Browser: http://127.0.0.1:8080
+- API Ollama: http://127.0.0.1:11434
+
+Para abrir a interface de outro computador sem publicar portas, execute no cliente:
+
+```bash
+ssh -L 3000:127.0.0.1:3000 usuario@IP_DO_SERVIDOR
+```
+
+Em seguida, abra `http://127.0.0.1:3000` no cliente. Para instruções detalhadas, veja [docs/INSTALACAO.md](docs/INSTALACAO.md).
+
+**Atenção:** não encaminhe portas administrativas no roteador. O primeiro usuário do Open WebUI deve ser configurado com senha forte. Para backup básico das configurações, execute `bash scripts/backup.sh`; os volumes Docker, arquivos privados e modelos precisam de política de backup própria.
+
+### Estrutura do projeto
+
+```text
+dockServ/
+├── compose.yaml              # Ollama, Open WebUI, Nginx, Node e File Browser
+├── .env.example              # Variáveis configuráveis (sem segredos)
+├── site/                     # Site estático de exemplo
+├── apps/node-demo/           # Aplicação Node.js de demonstração
+├── scripts/                  # Setup, download de modelo e backup
+├── docs/                     # Guia e documentação de instalação
+├── docs/images/arquitetura.svg
+└── LICENSE                   # MIT
+```
+
 ## Visão geral
 
 ![Diagrama da arquitetura DockServ](docs/images/arquitetura.svg)
