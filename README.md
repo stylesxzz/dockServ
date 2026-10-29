@@ -85,6 +85,17 @@ dockServ/
 └── LICENSE                   # MIT
 ```
 
+### Ativar GPU NVIDIA (opcional)
+
+Depois de instalar o driver NVIDIA no host e configurar o NVIDIA Container Toolkit, inicie a stack com o override:
+
+```bash
+docker compose -f compose.yaml -f compose.gpu.yaml config -q
+docker compose -f compose.yaml -f compose.gpu.yaml up -d
+```
+
+Sem GPU NVIDIA, use o comando normal `docker compose up -d --build`. O override de GPU só é para hosts compatíveis.
+
 ## Visão geral
 
 ![Diagrama da arquitetura DockServ](docs/images/arquitetura.svg)
